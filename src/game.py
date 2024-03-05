@@ -13,7 +13,8 @@ class Game():
     def run(self, screen):
         #-- Set Values -- 
         run = True
-        
+        alive = True
+
         clock = pygame.time.Clock()
 
         all_sprite_list = pygame.sprite.Group()
@@ -26,7 +27,7 @@ class Game():
         guy = player.Player([0,0,255], 400, 560, 20, 20)
 
         for i in range(50):
-            bl = block.Block(random.randint(0,785), random.randint(-100, 0))
+            bl = block.Block(random.randint(0,785), random.randint(-600, 0))
             enemy_sprite_list.add(bl)
             all_sprite_list.add(bl)
 
@@ -42,8 +43,9 @@ class Game():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
+                    return -1
                 #-- Check Key Commands --
-                if event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN and alive:
                     if event.key == pygame.K_LEFT:
                         guy.change_x = -4
                     elif event.key == pygame.K_RIGHT:
@@ -58,13 +60,17 @@ class Game():
                         guy.change_x = 0
                     elif event.key == pygame.K_RIGHT:
                         guy.change_x = 0
+                    elif event.key == pygame.K_m:
+                        run = False
+                        return 0
                     
             #-- Check if all enemies cleared --
             if not enemy_sprite_list:
                 return True
             # -- Game Logic --
             screen.fill([255, 255, 255])
-            all_sprite_list.update()
+            if alive:
+                all_sprite_list.update()
             
             #-- check if blocks have gone off screen --
             for b in enemy_sprite_list:
@@ -75,7 +81,9 @@ class Game():
             #-- Collision Checks --
             player_hit_list = pygame.sprite.spritecollide(guy, enemy_sprite_list, False)
             for i in player_hit_list:
+                alive = False
                 print("DEAD")
+                return 2
 
 
             

@@ -20,6 +20,8 @@ class Menu():
                         return 1
                     
 
+                    
+
             screen.fill([0,0,0])
 
             pygame.draw.rect(screen, [0,255,0], pygame.Rect(30, 30, 60, 60))
